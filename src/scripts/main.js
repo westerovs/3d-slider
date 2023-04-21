@@ -1,35 +1,48 @@
 class Slider {
   constructor() {
-    this.slider = document.querySelector('.slider')
+    this.slider = document.querySelector('.slider-wrapper')
+    
     this.step = 0
-    this.initialPoint = null
-    this.finalPoint = null
+    this.initialPosition = null
+    this.finalPosition = null
   }
   
   init = () => {
-    document.addEventListener('pointerdown', this.pointerDown)
-    document.addEventListener('pointerup', this.pointerUp)
+    this.slider.addEventListener('pointerdown', this.pointerDown)
+    this.slider.addEventListener('pointerout', () => this.setCursorStyle('grab'))
+    this.slider.addEventListener('pointerup', this.pointerUp)
   }
   
   pointerDown = (event) => {
     event.stopPropagation()
-    this.initialPoint = event
+    
+    this.slider.style.cursor = 'grabbing'
+    this.initialPosition = event
   }
   
   pointerUp = (event) => {
     event.stopPropagation()
+    this.finalPosition = event
     
-    this.finalPoint = event
+    this.setCursorStyle('grab')
     
-    const xAbs = Math.abs(this.initialPoint.pageX - this.finalPoint.pageX)
-    
+    const xAbs = Math.abs(this.initialPosition.pageX - this.finalPosition.pageX)
     if (xAbs < 20) return
     
-    if (this.finalPoint.pageX < this.initialPoint.pageX) {
-      this.slider.style.transform = `rotateY(${this.step += -90}deg)`
+    if (this.finalPosition.pageX < this.initialPosition.pageX) {
+      this.slider.style.transform = `rotateY(${this.step += 90}deg)`
     }
     else {
-      this.slider.style.transform = `rotateY(${this.step += 90}deg)`
+      this.slider.style.transform = `rotateY(${this.step += -90}deg)`
+    }
+  }
+  
+  setCursorStyle = (style) => {
+    switch (style) {
+      case'grab':
+        return this.slider.style.cursor = style
+      case'grabbing':
+        return this.slider.style.cursor = style
     }
   }
 }
