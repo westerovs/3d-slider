@@ -1,35 +1,37 @@
-const slider = document.querySelector('.slider')
-
-let step = 0
-let initialPoint = null
-let finalPoint = null
-
-const pointerDown = (event) => {
-  event.stopPropagation()
-  
-  initialPoint = event
-}
-
-const pointerUp = (event) => {
-  event.stopPropagation()
-  
-  finalPoint = event
-  
-  const xAbs = Math.abs(initialPoint.pageX - finalPoint.pageX)
-  
-  if (xAbs < 20) return
-  
-  if (finalPoint.pageX < initialPoint.pageX) {
-    slider.style.transform = `rotateY(${step += -90}deg)`
+class Slider {
+  constructor() {
+    this.slider = document.querySelector('.slider')
+    this.step = 0
+    this.initialPoint = null
+    this.finalPoint = null
   }
-  else {
-    slider.style.transform = `rotateY(${step += 90}deg)`
+  
+  init = () => {
+    document.addEventListener('pointerdown', this.pointerDown)
+    document.addEventListener('pointerup', this.pointerUp)
+  }
+  
+  pointerDown = (event) => {
+    event.stopPropagation()
+    this.initialPoint = event
+  }
+  
+  pointerUp = (event) => {
+    event.stopPropagation()
+    
+    this.finalPoint = event
+    
+    const xAbs = Math.abs(this.initialPoint.pageX - this.finalPoint.pageX)
+    
+    if (xAbs < 20) return
+    
+    if (this.finalPoint.pageX < this.initialPoint.pageX) {
+      this.slider.style.transform = `rotateY(${this.step += -90}deg)`
+    }
+    else {
+      this.slider.style.transform = `rotateY(${this.step += 90}deg)`
+    }
   }
 }
 
-const init = () => {
-  document.addEventListener('pointerdown', pointerDown)
-  document.addEventListener('pointerup', pointerUp)
-}
-
-init()
+new Slider().init()
